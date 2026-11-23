@@ -1,0 +1,47 @@
+name: build firmware
+
+on:
+  push:
+    paths-ignore: 
+      - ".gitignore"
+      - "LICENSE"
+      - "README.md"
+      - "README_zh.md"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y libusbgx-dev libconfig-dev pkg-config cmake ninja-build gcc
+    
+    - name: Fetch code
+      uses: actions/checkout@v6
+      with:
+        submodules: recursive
+    
+    - name: Build firmware
+      run: |
+        cmake --preset Release
+        cmake --build build
+    
+    - name: Upload firmware
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ github.event.repository.name }}-${{ github.run_id }}
+        path: |
+          build/U2HTS_Linux
+    
+    - name: Publish release
+      uses: softprops/action-gh-release@v3
+      if: github.ref_type == 'tag'
+      with:
+        files: |
+          build/U2HTS_Linux

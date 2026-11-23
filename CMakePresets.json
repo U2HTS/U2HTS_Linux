@@ -1,0 +1,32 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "default",
+            "hidden": true,
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "U2HTS_ENABLE_LED": false,
+                "U2HTS_ENABLE_PERSISTENT_CONFIG": false,
+                "U2HTS_ENABLE_KEY": false,
+                "U2HTS_ENABLE_FREERTOS": false,
+                "U2HTS_LOG_LEVEL": "U2HTS_LOG_LEVEL_INFO"
+            }
+        },
+        {
+            "name": "Debug",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "Release",
+            "inherits": "default",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        }
+    ]
+}
