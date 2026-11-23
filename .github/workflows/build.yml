@@ -1,4 +1,4 @@
-name: build firmware
+name: build executable
 
 on:
   push:
@@ -27,12 +27,12 @@ jobs:
       with:
         submodules: recursive
     
-    - name: Build firmware
+    - name: Build executable
       run: |
         cmake --preset Release
         cmake --build build
     
-    - name: Upload firmware
+    - name: Upload artifact
       uses: actions/upload-artifact@v7
       with:
         name: ${{ github.event.repository.name }}-${{ github.run_id }}
