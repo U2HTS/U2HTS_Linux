@@ -1,6 +1,6 @@
 # U2HTS_Linux
-Linux gadget port of [U2HTS](https://github.com/U2HTS/U2HTS).
-Tested on Raspberry Pi 4.
+Linux gadget port of [U2HTS](https://github.com/U2HTS/U2HTS).  
+Tested on Raspberry Pi 4.  
 [zh_CN(简体中文)](./README_zh.md)
 
 # Build
@@ -40,6 +40,6 @@ sudo ./build/U2HTS_Linux
 
 # Notes
 
-No bus drivers are currently implemented, so only the `linux-multitouch` driver can be used.
+No bus transports are currently implemented, so the `linux-multitouch` is the only driver supported.
 
-This driver automatically scans for multi-touch devices in the system and bridges them to the USB reporting framework.
+This driver automatically scans for multi-touch devices in the system and use them as touch data source.

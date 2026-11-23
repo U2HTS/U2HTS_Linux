@@ -2,7 +2,7 @@
 
 #include "u2hts_core.h"
 
-#define LOG_TAG "linux"
+#define LOG_TAG "u2hts_linux"
 
 static usbg_gadget* gadget_dev;
 static usbg_state* lib_state;

@@ -32,8 +32,8 @@ sudo ./build/U2HTS_Linux
 
 # 注意事项
 
-当前没有实现任何总线驱动，所以只能使用 `linux-multitouch` 驱动。  
-该驱动会自动扫描系统中的多点触摸设备，并将其桥接至USB上报框架中。  
+当前没有实现任何总线传输，所以只能使用 `linux-multitouch` 驱动。  
+该驱动会自动扫描系统中的多点触摸设备，并将其作为触摸数据源。  
 命令行参数如下：
 ```bash
 用法: U2HTS_Linux [选项]
@@ -42,5 +42,9 @@ sudo ./build/U2HTS_Linux
       --pid <pid>          USB 产品 ID (默认: 0x8572)
       --serial <str>       USB 序列号 (默认: 读取 /etc/machine-id)
       --configfs <path>    configfs 挂载点 ( 默认: /sys/kernel/config)
+      --invert-x           翻转 X 轴
+      --invert-y           翻转 Y 轴
+      --swap-x-y           交换 XY 轴
+      --max-tps <n>        限制触摸点为 n
   -h, --help               显示此帮助
 ```
