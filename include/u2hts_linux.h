@@ -20,7 +20,7 @@ typedef struct {
   const char* configfs_path;
 } u2hts_linux_usb_config;
 
-bool u2hts_linux_usb_init(const u2hts_linux_usb_config* cfg);
+void u2hts_linux_usb_set_config(const u2hts_linux_usb_config* cfg);
 
 void u2hts_linux_usb_release();
 

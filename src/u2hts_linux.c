@@ -12,6 +12,8 @@ static int usb_dev_fd = 0;
 
 static char usb_serial[64] = "0123456789";
 
+static const u2hts_linux_usb_config* usb_cfg;
+
 static void u2hts_linux_load_serial() {
   FILE* fp = fopen("/etc/machine-id", "r");
   if (!fp) return;
@@ -97,12 +99,16 @@ const static uint8_t u2hts_hid_report_descriptor[] = {
     U2HTS_HID_REPORT_TP_MAX_COUNT_DESC(U2HTS_HID_REPORT_TP_MAX_COUNT_ID),
     U2HTS_HID_REPORT_DESCRIPTOR_END};
 
-bool u2hts_linux_usb_init(const u2hts_linux_usb_config* cfg) {
+void u2hts_linux_usb_set_config(const u2hts_linux_usb_config* cfg) {
+  usb_cfg = cfg;
+}
+
+static bool u2hts_linux_usb_create() {
   usbg_config* c;
   int usbg_ret;
 
-  if (cfg->serial && cfg->serial[0]) {
-    strncpy(usb_serial, cfg->serial, sizeof(usb_serial) - 1);
+  if (usb_cfg->serial && usb_cfg->serial[0]) {
+    strncpy(usb_serial, usb_cfg->serial, sizeof(usb_serial) - 1);
     usb_serial[sizeof(usb_serial) - 1] = '\0';
   } else {
     u2hts_linux_load_serial();
@@ -114,8 +120,8 @@ bool u2hts_linux_usb_init(const u2hts_linux_usb_config* cfg) {
       .bDeviceSubClass = 0x00,
       .bDeviceProtocol = 0x00,
       .bMaxPacketSize0 = 64, /* Max allowed ep0 packet size */
-      .idVendor = cfg->vid,
-      .idProduct = cfg->pid,
+      .idVendor = usb_cfg->vid,
+      .idProduct = usb_cfg->pid,
       .bcdDevice = 0x0001,
   };
 
@@ -136,7 +142,7 @@ bool u2hts_linux_usb_init(const u2hts_linux_usb_config* cfg) {
       .subclass = 0,
   };
 
-  usbg_ret = usbg_init(cfg->configfs_path, &lib_state);
+  usbg_ret = usbg_init(usb_cfg->configfs_path, &lib_state);
   if (usbg_ret != USBG_SUCCESS) {
     ULOGE(LOG_TAG, "Error on usbg init: %s : %s", usbg_error_name(usbg_ret),
           usbg_strerror(usbg_ret));
@@ -192,6 +198,8 @@ void u2hts_linux_usb_release() {
 }
 
 void u2hts_usb_init() {
+  if (!u2hts_linux_usb_create()) exit(EXIT_FAILURE);
+
   int usbg_ret = usbg_enable_gadget(gadget_dev, DEFAULT_UDC);
   if (usbg_ret != USBG_SUCCESS) {
     ULOGE(LOG_TAG, "Error enabling gadget: %s : %s",

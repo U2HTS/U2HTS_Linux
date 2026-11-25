@@ -135,8 +135,7 @@ int main(int argc, char** argv) {
       .configfs_path = configfs_path,
   };
 
-  bool ret = u2hts_linux_usb_init(&usb_cfg);
-  if (!ret) exit(EXIT_FAILURE);
+  u2hts_linux_usb_set_config(&usb_cfg);
 
   const u2hts_config cfg = {
       .controller = "linux-multitouch",
@@ -148,8 +147,7 @@ int main(int argc, char** argv) {
       .custom_controller_config = custom_config[0] ? custom_config : NULL,
   };
 
-  ret = u2hts_init(&cfg);
-  if (ret) exit(EXIT_FAILURE);
+  if (u2hts_init(&cfg)) exit(EXIT_FAILURE);
 
   while (run) u2hts_task();
 
